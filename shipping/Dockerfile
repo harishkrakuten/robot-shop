@@ -6,7 +6,7 @@ FROM debian:10 AS build
 RUN apt-get update && apt-get -y install maven
 
 WORKDIR /opt/shipping
-
+COPY agent /AgentDir/
 COPY pom.xml /opt/shipping/
 RUN mvn dependency:resolve
 COPY src /opt/shipping/src/
@@ -26,5 +26,5 @@ ENV DB_HOST=mysql
 
 COPY --from=build /opt/shipping/target/shipping-1.0.jar shipping.jar
 
-CMD [ "java", "-Xmn256m", "-Xmx768m", "-jar", "shipping.jar" ]
+CMD [ "java", "-Xmn256m", "-Xmx768m","-javaagent:/agent/sixthsense-agent.jar","-jar", "shipping.jar" ]
 
